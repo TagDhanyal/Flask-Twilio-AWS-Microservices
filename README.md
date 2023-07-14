@@ -2,13 +2,6 @@
 
 Project Description: This project is a microservices-based application that enables users to make purchases through a web interface and receive SMS notifications. It consists of multiple microservices built with Flask, integrated with Twilio for SMS communication, and uses MongoDB for data storage.
 
-## Screenshots
-
-Homepage HTML screenshot: [insert screenshot here]
-Database screenshot: [insert screenshot here]
-SMS notification screenshot: [insert screenshot here]
-
-
 ## Features
 
 - Purchase Form: Users can access the web interface to fill out a purchase form, which includes their name, selected product, and contact information.

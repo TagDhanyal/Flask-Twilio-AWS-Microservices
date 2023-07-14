@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purchase Form</title>
+    <style>
+        body {
+            background-color: #000000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #395979;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-group button {
+            background-color: #ff5722;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .phone-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-group input[type="tel"] {
+            flex: 1;
+        }
+
+        .phone-group input[type="text"] {
+            width: 100px;
+            margin-right: 10px;
+        }
+
+        .spooky-image {
+            max-width: 100%;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Purchase Form</h1>
+        <form>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="product">Product:</label>
+                <select id="product" name="product" required>
+                    <option value="Product A">Product A</option>
+                    <option value="Product B">Product B</option>
+                    <option value="Product C">Product C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <div class="phone-group">
+                    <input type="text" id="country-code" name="country-code" placeholder="+1" required>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="notification">Notification Method:</label>
+                <select id="notification" name="notification" required>
+                    <option value="SMS">SMS</option>
+                    <option value="Call">Call</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select the form element
+        const form = document.querySelector('form');
+
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get the form input values
+            const name = document.getElementById('name').value;
+            const product = document.getElementById('product').value;
+            const countryCode = document.getElementById('country-code').value;
+            const phone = document.getElementById('phone').value;
+            const notification = document.getElementById('notification').value;
+
+            // Prepare the request body
+            const requestBody = {
+                name: name,
+                product: product,
+                phone: countryCode + phone,
+                notification: notification
+            };
+
+            // Make a POST request to the purchase microservice's endpoint
+            fetch('https://<API_GATEWAY_ENDPOINT>/save_purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Purchase was successfully saved
+                    console.log('Purchase saved successfully');
+                    // Call the SMS or call endpoint in the app as needed
+                    // Replace '/api/send-sms' or '/api/make-call' with the actual endpoints
+                    if (notification === 'SMS') {
+                        fetch('https://<API_GATEWAY_ENDPOINT>/send-sms', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // SMS sent successfully
+                                console.log('SMS sent successfully');
+                            } else {
+                                // Error occurred while sending SMS
+                                console.log('Failed to send SMS');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error occurred while sending SMS:', error);
+                        });
+                    } else if (notification === 'Call') {
+                        fetch('https://<API_GATEWAY_ENDPOINT>/call_customer', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                // Call initiated successfully
+                                console.log('Call initiated successfully');
+                            } else {
+                                // Error occurred while making the call
+                                console.log('Failed to make the call');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error occurred while making the call:', error);
+                        });
+                    }
+                } else {
+                    // Error occurred while saving the purchase
+                    console.log('Failed to save purchase');
+                }
+            })
+            .catch(error => {
+                console.error('Error occurred while saving the purchase:', error);
+            });
+        });
+    });
+</script>
+</body>
+</html>

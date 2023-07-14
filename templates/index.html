@@ -135,7 +135,7 @@
             };
 
             // Make a POST request to the purchase microservice's endpoint
-            fetch('https://<API_GATEWAY_ENDPOINT>/save_purchase', {
+            fetch('http://localhost:5001/api/purchase/save_purchase', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -149,7 +149,7 @@
                     // Call the SMS or call endpoint in the app as needed
                     // Replace '/api/send-sms' or '/api/make-call' with the actual endpoints
                     if (notification === 'SMS') {
-                        fetch('https://<API_GATEWAY_ENDPOINT>/send-sms', {
+                        fetch('http://localhost:5001/api/sms', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -169,7 +169,7 @@
                             console.error('Error occurred while sending SMS:', error);
                         });
                     } else if (notification === 'Call') {
-                        fetch('https://<API_GATEWAY_ENDPOINT>/call_customer', {
+                        fetch('http://localhost:5001/api/call_customer', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
